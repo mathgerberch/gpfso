@@ -84,15 +84,9 @@ p1
 
 
 ##########figure 2(b)##################################
-theta_star<-read.table('Data/CQR/d5/theta_star_d5_q5.txt')$V1
-errorE<-read.table("Data/CQR/d5/errorE_d5_q5_M20.txt")$V1 #Euclidian norm
-errorS<-read.table("Data/CQR/d5/errorS_d5_q5_M20.txt")$V1 #sup norm
-
-
-errorE_jit<-read.table("Data/CQR/d5/errorE_d5_q5_jit_M20.txt")$V1 #Euclidian norm
-errorS<-read.table("Data/CQR/d5/errorS_d5_q5_jit_M20.txt")$V1 #sup norm
-
-tr<-read.table("Data/CQR/d5/tr_d5_q5.txt")$V1 #time instants at which above quantities are computed
+errorE<-read.table("Data/CQR/errorE_d5_q5_M20.txt")$V1
+errorE_jit<-read.table("Data/CQR/errorE_d5_q5_jit_M20.txt")$V1
+tr<-read.table("Data/CQR/tr_d5_q5.txt")$V1 #time instants at which above quantities are computed
 T_end<-length(tr) 
 
 

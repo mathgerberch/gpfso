@@ -45,7 +45,7 @@ GPFSO_cqr<-function(tuning_parameters, target , Data, cl=1, seed){
 jittering_cqr<-function(tuning_parameters, target, iota, Data, cl=1, seed){
    N<-tuning_parameters$N
    target_parameters<-target$parameters
-   c_ess<-tuning_parameters$ESS_bound
+   c_ess<-tuning_parameters$c_ess
    d<-target$dimension
    val<-.C('censored_online_jitter', as.integer(cl), as.double(target_parameters$quantile), as.double(c_ess*N), as.double(target_parameters$prior_mean), 
           as.double(sqrt(target_parameters$prior_var)), as.integer(seed), as.integer(N),  as.integer(d), as.integer(nrow(Data)), 

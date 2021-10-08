@@ -92,18 +92,18 @@ for(m in 1:M){
 }
 
 ##Save data for Figure 5(a)
-#write.table(theta_star,"Data/Mixture/theta_star.txt",col.names=FALSE, row.names=FALSE)
-#write.table(res2,"Data/Mixture/BoxplotS_M100_T10p5.txt",col.names=FALSE, row.names=FALSE)
-#write.table(res4,"Data/Mixture/tBoxplotS_M100_T10p5.txt",col.names=FALSE, row.names=FALSE)
-#write.table(res22,"Data/Mixture/BoxplotS_M100.txt",col.names=FALSE, row.names=FALSE)
-#write.table(res44,"Data/Mixture/tBoxplotS_M100.txt",col.names=FALSE, row.names=FALSE)
+write.table(theta_star,"Data/Mixture/theta_star.txt",col.names=FALSE, row.names=FALSE)
+write.table(res2,"Data/Mixture/BoxplotS_M100_T10p5.txt",col.names=FALSE, row.names=FALSE)
+write.table(res4,"Data/Mixture/tBoxplotS_M100_T10p5.txt",col.names=FALSE, row.names=FALSE)
+write.table(res22,"Data/Mixture/BoxplotS_M100.txt",col.names=FALSE, row.names=FALSE)
+write.table(res44,"Data/Mixture/tBoxplotS_M100.txt",col.names=FALSE, row.names=FALSE)
 
-
+#####################################################################################
 #Example of run where G-PFSO Escapes from local mode
-###############################################
-T_end<-10^5
+#####################################################################################
+T_end<-2*10^5
 start_time <- Sys.time()
-theta<-GPFSO_mixture(N=5000, target, observations[1:T_end,], cl=1, seed=seed_vec[14])
+theta<-GPFSO_mixture(N=5000, target, observations[1:T_end,], cl=1, seed=seed_vec[8])
 end_time <- Sys.time()
 ##running time is
 print(end_time-start_time)
@@ -111,36 +111,19 @@ k<-3
 plot(theta$MEAN[1000:T_end,k],type='l')
 abline(h=theta_star[k])
 
-k<-5
-plot(theta$MEAN[1:50000,k],type='l')
-abline(h=theta_star[k])
-
-#Save data for Figure 4(b)
-#write.table(theta$MEAN[,3],"Data/Mixture/traj_3.txt",col.names=FALSE, row.names=FALSE)
-#write.table(theta$MEAN[,5],"Data/Mixture/traj_5.txt",col.names=FALSE, row.names=FALSE)
-
-
-T_end<-10^5
-start_time <- Sys.time()
-theta<-GPFSO_mixture(N=5000, target, observations[1:T_end,], cl=1, seed=seed_vec[25])
-end_time <- Sys.time()
-
 k<-6
-plot(theta$MEAN[,k],type='l')
+plot(theta$MEAN[1:T_end,k],type='l')
 abline(h=theta_star[k])
 
 #Save data for Figure 4(b)
-#write.table(theta$MEAN[,6],"Data/Mixture/traj_6.txt",col.names=FALSE, row.names=FALSE)
+write.table(theta$MEAN[,6],"Data/Mixture/traj_6.txt",col.names=FALSE, row.names=FALSE)
 
-
- 
- 
 #####################################################################################
-#Jittering estimation: 100 runs with T=10^5 iterations
+## G-PFSO: 100 runs with T=10^5 iterations, student's with heavier tails
 ##################################################################################### 
-T_end<-10^5
+target$parameters$nu<-2
+T_end<- 10^5
 T_end2<-2*10^4
-M<-100
 res1<-rep(0,M)
 res2<-rep(0,M)
 res3<-rep(0,M)
@@ -149,9 +132,8 @@ res11<-rep(0,M)
 res22<-rep(0,M)
 res33<-rep(0,M)
 res44<-rep(0,M)
-est_mat<-matrix(0,M,d)
 for(m in 1:M){
-   theta<-jittering_mixture(N=30000, target, observations[1:T_end,], iota= 0.05, cl=1, seed=seed_vec[m])
+   theta<-GPFSO_mixture(N=5000, target, observations[1:T_end,], cl=1, seed=seed_vec[m])
    bar_mean<-apply(theta$MEAN,2,mean)
    bar_mean2<-apply(theta$MEAN[1:T_end2,],2,mean)
    est<-theta$MEAN[T_end,]
@@ -164,15 +146,11 @@ for(m in 1:M){
    res22[m]<- max( abs(bar_mean2-theta_star))
    res33[m]<- sqrt( sum(est2-theta_star)^2)
    res44[m]<- max(abs(est2-theta_star))
-   est_mat[m,]<-theta$MEAN[T_end,]
    print(m)
-   print(res4[m])
+   print(cbind(res44[m],res4[m]))
 }
-   
-##Save data for Figure 5(a)
-#write.table(res4,"Data/Mixture/PSMCO_tBoxplotS_M100_iota005_N30000_T10p5.txt",col.names=FALSE, row.names=FALSE)
-#write.table(res44,"Data/Mixture/PSMCO_tBoxplotS_M100_iota005_N30000.txt",col.names=FALSE, row.names=FALSE)
-
+write.table(res4,"Data/Mixture/tBoxplotS_M100_T10p5_st.txt",col.names=FALSE, row.names=FALSE)
+write.table(res44,"Data/Mixture/tBoxplotS_M100_st.txt",col.names=FALSE, row.names=FALSE)
 
 #####################################################################################
 ## G-PFSO: 5 runs with T=2*10^6 iterations
@@ -197,9 +175,6 @@ rm(proba,mu1,mu2,sigma1,sigma2,ind,X,Y)
 observations<-rbind(observations,observations2)
 rm(observations2)
 
-## Reduce the value of C_Sigma to 0.5, to be able
-## to visualize well the convergence rate
-#target$parameters$learning_rate[1]<-0.5
 
 T_end<-nrow(observations)
 M1<-5
@@ -212,7 +187,6 @@ for(m in 1:M1){
    theta<-GPFSO_mixture(N=5000, target, observations[1:T_end,], cl=1, seed=use_seed[m])
    bar_mean<-apply(theta$MEAN,2,cumsum)/(1:nrow(theta$MEAN))
    bar_mean<-bar_mean[points,]
-   est<-theta$MEAN[T_end,]
    error <-apply((t(bar_mean)-theta_star)^2,2,sum)^{1/2}
    res1[m,]<-error
    error <-apply(abs(t(bar_mean)-theta_star),2,max) 
@@ -226,34 +200,10 @@ errorE<-apply(res1[1:M1,],2,mean)
 errorS<-apply(res2[1:M1,],2,mean)
 
 ##Save data for Figure 5(c)
-#write.table(errorE,"Data/Mixture/errorE_M5.txt",col.names=FALSE, row.names=FALSE)
-#write.table(errorS,"Data/Mixture/errorS_M5.txt",col.names=FALSE, row.names=FALSE)
-#write.table(tr,"Data/Mixture/tr.txt",col.names=FALSE, row.names=FALSE)
-
-error<-errorE
-t_in<-1#10^4
-beta<-0.5
-work<-(tr)^{-beta}
-c<-error[length(error)]/work[length(error)]
-work<-c*work
-plot(log(tr[t_in:length(tr)]),log(error[t_in:length(tr)]), type='l')
-lines(log(tr[t_in:length(tr)]), log(work[t_in:length(tr)]), type='l', col='red')
-
+write.table(errorE,"Data/Mixture/errorE_M5.txt",col.names=FALSE, row.names=FALSE)
+write.table(tr,"Data/Mixture/tr.txt",col.names=FALSE, row.names=FALSE)
 
  
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

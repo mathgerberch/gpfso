@@ -51,8 +51,6 @@ target <- list(dimension = d, parameters = target_parameters)
 
 theta_star[1]<-  3+ sigma_y*qnorm(target$parameters$quantile)
 
-
-
 #####################################################################################
 ## Tunning parameters
 #####################################################################################
@@ -82,9 +80,8 @@ errorS<-apply(res2,2,mean)
 tr<-(1:T_end)[points]
 
 #save data for Figure 2(b)
-#write.table(errorE,"Data/CQR/errorE_d5_q5_M20.txt",col.names=FALSE, row.names=FALSE)
-#write.table(tr,"Data/CQR/tr_d5_q5.txt",col.names=FALSE, row.names=FALSE)
-
+write.table(errorE,"Data/CQR/errorE_d5_q5_M20.txt",col.names=FALSE, row.names=FALSE)
+write.table(tr,"Data/CQR/tr_d5.txt",col.names=FALSE, row.names=FALSE)
 
 ##########################################################################################################################
 #Jittering: 20 runs with T=10^7 and quantile=0.5
@@ -110,8 +107,7 @@ errorE<-apply(res1,2,mean)
 errorS<-apply(res2,2,mean)
 
 #save data for Figure 2(b)
-#write.table(errorE,"Data/CQR/errorE_d5_q5_jit_M20.txt",col.names=FALSE, row.names=FALSE)
-
+write.table(errorE,"Data/CQR/errorE_d5_q5_jit_M20.txt",col.names=FALSE, row.names=FALSE)
 
 ##########################################################################################################################
 #G-PFSO: 20 runs with T=10^7 and quantile=0.99
@@ -138,8 +134,7 @@ errorS<-apply(res2,2,mean)
 tr<-(1:T_end)[points]
 
 #save data for Figure 2(c)
-#write.table(errorE,"Data/CQR/errorE_d5_q99_M20.txt",col.names=FALSE, row.names=FALSE)
-#write.table(tr,"Data/CQR/tr_d5_q99.txt",col.names=FALSE, row.names=FALSE)
+write.table(errorE,"Data/CQR/errorE_d5_q99_M20.txt",col.names=FALSE, row.names=FALSE)
 
 ##########################################################################################################################
 #G-PFSO: 20 runs with T=10^7, quantile=0.99 and alpha=0.3
@@ -173,7 +168,7 @@ errorS<-apply(res2,2,mean)
 tr<-(1:T_end)[points]
 
 #save data for Figure 2(c)
-#write.table(errorE,"Data/CQR/errorE_d5_q99_M20_a3.txt",col.names=FALSE, row.names=FALSE)
+write.table(errorE,"Data/CQR/errorE_d5_q99_M20_a3.txt",col.names=FALSE, row.names=FALSE)
 
 ##########################################################################################################################
 #ADA GRAD: 1000 runs with T=10^7 and quantile=0.5
@@ -196,7 +191,7 @@ errorE<- sqrt(apply( (t(est$TILDE)-theta_star)^2,2,sum))
 errorS<- (apply( abs(t(est$TILDE)-theta_star),2,max))
 
 #save data for Figure 2(a)
-#write.table(errorS,"Data/CQR/ADA_BoxplotS_d5_q50.txt",col.names=FALSE, row.names=FALSE)
+write.table(errorS,"Data/CQR/ADA_BoxplotS_d5_q50.txt",col.names=FALSE, row.names=FALSE)
 
 ##########################################################################################################################
 #ADA GRAD: 1000 runs with T=10^7 and quantile=0.99
@@ -219,10 +214,8 @@ est<- ADA_cqr(observations[1:T_end,], quantile, c=c_val,  theta0=val)
 errorE<- sqrt(apply( (t(est$TILDE)-theta_star)^2,2,sum))
 errorS<- (apply( abs(t(est$TILDE)-theta_star),2,max))
 
-
 #save data for Figure 2(a)
-#write.table(errorS,"Data/CQR/ADA_BoxplotS_d5_q99.txt",col.names=FALSE, row.names=FALSE)
-
+write.table(errorS,"Data/CQR/ADA_BoxplotS_d5_q99.txt",col.names=FALSE, row.names=FALSE)
 
 
 

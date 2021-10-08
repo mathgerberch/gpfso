@@ -61,7 +61,7 @@ jittering_cqr<-function(tuning_parameters, target, iota, Data, cl=1, seed){
 GPFSO_multi<-function(tuning_parameters, target , Data, cl=1, seed){
    N<-tuning_parameters$N
    target_parameters<-target$parameters
-   c_ess<-tuning_parameters$ESS_bound
+   c_ess<-tuning_parameters$c_ess
    d<-target$dimension
    T_end<-nrow(Data)
    val<-.C('GPFSO_multimodal', as.integer(cl),  as.double(c_ess*N),  as.integer(seed), 

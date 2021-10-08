@@ -107,7 +107,7 @@ lik_mle<-est_qN$val
 print(lik_mle)
 theta_star<-est_qN$par
 ##Save MLE, used for Figure 5(a)
-#write.table(theta_star,"Data/g_and_k/mle.txt",col.names=FALSE, row.names=FALSE)
+write.table(theta_star,"Data/g_and_k/mle.txt",col.names=FALSE, row.names=FALSE)
 
 #Compute estimation errors
 ####################################
@@ -117,10 +117,10 @@ res4<-apply(abs( t(est_mat2)-theta_star),2,max)
 res44<-apply(abs( t(est_mat22)-theta_star),2,max)
 
 ##Save data for Figure 5(b)
-#write.table(res33, "Data/g_and_k/errorS_Boxplot_nit10000.txt",col.names=FALSE, row.names=FALSE)
-#write.table(res44, "Data/g_and_k/errorS_tBoxplot_nit10000.txt",col.names=FALSE, row.names=FALSE)
-#write.table(res3, "Data/g_and_k/errorS_Boxplot.txt",col.names=FALSE, row.names=FALSE)
-#write.table(res4, "Data/g_and_k/errorS_tBoxplot.txt",col.names=FALSE, row.names=FALSE)
+write.table(res33, "Data/g_and_k/errorS_Boxplot_nit10000.txt",col.names=FALSE, row.names=FALSE)
+write.table(res44, "Data/g_and_k/errorS_tBoxplot_nit10000.txt",col.names=FALSE, row.names=FALSE)
+write.table(res3, "Data/g_and_k/errorS_Boxplot.txt",col.names=FALSE, row.names=FALSE)
+write.table(res4, "Data/g_and_k/errorS_tBoxplot.txt",col.names=FALSE, row.names=FALSE)
 
 
 #convergence to a local maximum
@@ -131,56 +131,13 @@ ind<-(1:M)[res4>4]
 #the algorithm has converged
 #(5 elements of Theta_{loc,star} are:
 l_max1<-est_mat1[ind[1],]
-l_max2<-est_mat1[ind[3],]
-l_max3<-est_mat1[ind[5],]
-l_max4<-est_mat1[ind[7],]
-l_max5<-est_mat1[ind[10],]
+l_max2<-est_mat1[ind[2],]
+l_max3<-est_mat1[ind[7],]
+l_max4<-est_mat1[ind[8],]
+l_max5<-est_mat1[ind[13],]
 ##Save these local optima, the first one being used for Figure 5(a)
-#write.table(cbind(l_max1,l_max2,l_max3,l_max4, l_max5), "Data/g_and_k/local_maxima.txt",col.names=FALSE, row.names=FALSE)
+write.table(cbind(l_max1,l_max2,l_max3,l_max4, l_max5), "Data/g_and_k/local_maxima.txt",col.names=FALSE, row.names=FALSE)
    
-#other local maximum: Run R1
-####################################
-theta_star<-read.table("Data/g_and_k/mle.txt")$V1
-m<-1  
-set.seed(seed_vec[m])
-use_obs<-observations[sample(1:datalength, n_it2, replace=T),]
-theta<- G_PFSO(N=500, target, use_obs[1:10000,], cl=10)
-plot(theta$MEAN[,3], type="l") #tilde{theta}_t^N stuck
-abline(h=theta_star[3])
-#tilde{theta}_t^N stuck between t=4000 and t=6000
-plot(4000:6000, theta$MEAN[4000:6000,3], type="l", ylim=c(-4,1)) 
-abline(h=theta_star[3])
-#compute theta_{R1}
-est<-optim(theta$MEAN[5000,],lik_g_and_k, method="L-BFGS-B", lower=l, upper=u)
-print(est$par)
-#distance theta_{R1} and MLE
-print(max(abs(est$par-theta_star))) 
-#Plot distance \|theta_{R1}-tilde{theta}_t\| for t<5000
-#to check that that tilde{theta}_t converges to theta_{R1}
-#during these iterations 
-plot(1:5000, apply(abs(t(theta$MEAN[1:5000, ])-est$par),2,max), type='l')
- 
-#other local maximum: Run R2
-####################################
-m<- 74 #run R2
-set.seed(seed_vec[m])
-use_obs<-observations[sample(1:datalength, n_it2, replace=T),]
-theta<- G_PFSO(N=500, target, use_obs[1:15000,], cl=10)
-#tilde{theta}_t^N stuck in a local mode
-#between iterations 8000 and 9000
-plot(theta$MEAN[1:12000,3], type="l") 
-abline(h=theta_star[3])
-#compute theta_{R2}
-est<-optim(theta$MEAN[9000,],lik_g_and_k, method="L-BFGS-B", lower=l, upper=u)
-print(est$par)
-#distance theta_{R2} and MLE
-print(max(abs(est$par-theta_star)))
-#Plot distance \|theta_{R2}-tilde{theta}_t\| for t<9000
-#to check that that tilde{theta}_t converge to theta_{R2}
-#during these iterations 
-plot(1:9000, apply(abs(t(theta$MEAN[1:9000, ])-est$par),2,max), type='l')
-
- 
 
 
 #####################################################################################
@@ -245,55 +202,7 @@ res4<-apply(abs( t(est_mat2)-theta_star),2,max)
 res44<-apply(abs( t(est_mat22)-theta_star),2,max)
 
 ##save data for figure 5(b)
-#write.table(res3, "Data/g_and_k/errorS_Boxplot_alpha05.txt",col.names=FALSE, row.names=FALSE)
-
-
-#####################################################################################
-# G-PFSO: 100 runs with T=50000 iterations, (alpha,c_Sigma,N)=(0.5,1,1000)
-######################################################################################
-theta_star<-read.table("Data/g_and_k/mle.txt")$V1
-n_it2<-5*10^6
-alpha<-0.5
-c_Sigma<-1
-comp_seq<-h_Tp(alpha,n_it2)
-target$parameters$h2_t<-comp_seq$H^2                     
-target$parameters$student<-comp_seq$Tp
-target$parameters$Sigma<-diag(c_Sigma,d)
-rm(comp_seq) 
-n_it<-  50000
-n_it1<- 10000
-M<-100
-res1<-rep(0,M)
-res2<-rep(0,M)
-est_mat1<-matrix(0,M,d)
-est_mat11<-matrix(0,M,d)
-est_mat2<-matrix(0,M,d)
-est_mat22<-matrix(0,M,d)
-for(m in 1:M){
-   set.seed(seed_vec[m])
-   use_obs<-observations[sample(1:datalength, n_it2, replace=T),]
-   theta<- G_PFSO(N=1000, target, use_obs[1:n_it,], cl=8)
-   bar_mean<-apply(theta$MEAN,2,cumsum)/(1:nrow(theta$MEAN))
-   est_mat1[m,]<-bar_mean[nrow(bar_mean),]
-   est_mat11[m,]<-bar_mean[n_it1,]
-   res1[m]<-fast_gandk_multi_obs(est_mat1[m,], observations, cl=10)
-   est_mat2[m,]<-theta$MEAN[nrow(theta$MEAN),]
-   est_mat22[m,]<-theta$MEAN[n_it1,]
-   res2[m]<- fast_gandk_multi_obs(est_mat2[m,], observations, cl=10)
-   print(m) 
-   print(max(abs(est_mat2[m,]-theta_star)))
-}
-
-
-#Compute estimation errors
-####################################
-res3<-apply(abs( t(est_mat1)-theta_star),2,max)
-res33<-apply(abs( t(est_mat11)-theta_star),2,max)
-res4<-apply(abs( t(est_mat2)-theta_star),2,max)
-res44<-apply(abs( t(est_mat22)-theta_star),2,max)
-
-##save data for figure 5(b)
-#write.table(res3, "Data/g_and_k/errorS_Boxplot_alpha05_c1.txt",col.names=FALSE, row.names=FALSE)
+write.table(res3, "Data/g_and_k/errorS_Boxplot_alpha05.txt",col.names=FALSE, row.names=FALSE)
 
 
 #####################################################################################
@@ -324,10 +233,10 @@ for(m in 1:M){
    bar_mean<-apply(theta$MEAN,2,cumsum)/(1:nrow(theta$MEAN))
    est_mat1[m,]<-bar_mean[nrow(bar_mean),]
    est_mat11[m,]<-bar_mean[n_it1,]
-   res1[m]<- fast_gandk_multi_obs(est_mat1[m,], observations, cl=10)
+   res1[m]<- fast_gandk_multi_obs(est_mat1[m,], observations, cl=8)
    est_mat2[m,]<-theta$MEAN[nrow(theta$MEAN),]
    est_mat22[m,]<-theta$MEAN[n_it1,]
-   res2[m]<- fast_gandk_multi_obs(est_mat2[m,], observations, cl=10)
+   res2[m]<- fast_gandk_multi_obs(est_mat2[m,], observations, cl=8)
    print(m) 
    print(max(abs(est_mat2[m,]-theta_star)))
 }
@@ -341,7 +250,7 @@ res4<-apply(abs( t(est_mat2)-theta_star),2,max)
 res44<-apply(abs( t(est_mat22)-theta_star),2,max)
 
 ##save data for figure 5(b)
-#write.table(res3, "Data/g_and_k/errorS_Boxplot_alpha05_c1_N500.txt",col.names=FALSE, row.names=FALSE)
+write.table(res3, "Data/g_and_k/errorS_Boxplot_alpha05_c1_N500.txt",col.names=FALSE, row.names=FALSE)
 
 
 #####################################################################################
@@ -368,7 +277,8 @@ points<-seq(10^4,n_it, length.out=n_points)
 error<-apply(res,2,mean)
 
 ##save data for figure 5(c)
-#write.table(error, "Data/g_and_k/errorE_c1_500.txt",col.names=FALSE, row.names=FALSE)
+write.table(error[points], "Data/g_and_k/errorE_c1_500.txt",col.names=FALSE, row.names=FALSE)
+write.table((1:n_it)[points], "Data/g_and_k/tr.txt",col.names=FALSE, row.names=FALSE)
 
 
 

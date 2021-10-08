@@ -1,23 +1,19 @@
 
 
+
+
 ##compute (h_t) and (t_p)
-h_Tp<-function(alpha,datalength){
+h_Tp<-function(alpha,datalength, A=1, B=1, varrho=0.1, t_0=5){
    h_seq<-(1:datalength)^(-alpha)
-   scale1<-10
-   diff_min<-10
-   f_m<-function(x){return (max(0.5,x^{alpha*0.8}))}
    stud_YN<-rep(0,datalength)
-   t_0<-10
    t_1<-1
    while(t_1 <= datalength){
-     t_1<-t_0+max(diff_min,scale1*floor(f_m(t_0)*log(1/h_seq[t_0])))
+     t_1<-t_0+ceiling(max(A*t_0^varrho*log(t_0),B))
      if(t_1 <= datalength) stud_YN[t_1]<-1
      t_0<-t_1
   }
   return(list(H=h_seq,Tp=stud_YN))
 }
-
-
 
 
 ###########################################################################################################################

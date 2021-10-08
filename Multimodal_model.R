@@ -54,29 +54,29 @@ target <- list(dimension = d,
 #####################################################################################
 ## Tunning parameters
 #####################################################################################
-tuning_parameters <- list(N=2000,   ESS_bound=0.7) 
+tuning_parameters <- list(N=2000,   c_ess=0.7) 
 #####################################################################################
-## Estimation:Test
+## G-PFSO: Escape from local mode
 #####################################################################################             
 set.seed(30485)
-seed_vec=sample(1:10^5,2)
-T_end<-10^4
+seed_vec=sample(1:10^5,10)
+T_end<-10^5
 start_time <- Sys.time()
-theta<-GPFSO_multi(tuning_parameters, target , observations[1:T_end,], cl=1, seed=seed_vec[2])
+theta<-GPFSO_multi(tuning_parameters, target , observations[1:T_end,], cl=1, seed=seed_vec[7])
 end_time <- Sys.time()
 print(end_time-start_time)
 
-k<-1
+k<-5
+T_end<-30000
 plot(theta$MEAN[100:T_end,k],type='l')
 abline(h=theta_star[k])
 
 ##save data for Figure 3(a)
-#write.table(theta$MEAN[,1],"Data/Multimodal/traj_theta1_d20.txt",col.names=FALSE, row.names=FALSE)
-
+write.table(theta$MEAN[,k],"Data/Multimodal/traj_theta5_d20.txt",col.names=FALSE, row.names=FALSE)
 #####################################################################################
 ## G-PFSO: 10 runs with T=10^6
 #####################################################################################
-tuning_parameters <- list(N=2000, K=10000,  ESS_bound=0.7, resampling=SSP_Resampling) 
+tuning_parameters <- list(N=2000, K=10000,  c_ess=0.7, resampling=SSP_Resampling) 
 set.seed(30485)
 T_end<-10^6
 M<-10
@@ -101,10 +101,8 @@ errorE<-apply(res1,2,mean)
 errorS<-apply(res2,2,mean)
 
 ##save data for Figure 3(c)
-#write.table(errorE,"Data/Multimodal/errorE_d20_M10.txt",col.names=FALSE, row.names=FALSE)
-#write.table(tr,"Data/Multimodal/tr_d20.txt",col.names=FALSE, row.names=FALSE)
-
-
+write.table(errorE,"Data/Multimodal/errorE_d20_M10.txt",col.names=FALSE, row.names=FALSE)
+write.table(tr,"Data/Multimodal/tr_d20.txt",col.names=FALSE, row.names=FALSE)
 #####################################################################################
 ## G-PFSO: 100 runs with T=10^5 and with c_sigma=10
 #####################################################################################
@@ -122,9 +120,9 @@ for(m in 1:M){
 }
 
 ##save data for Figure 3(a)
-#write.table(res2,"Data/Multimodal/boxplotS_d20_M100_T10p5.txt",col.names=FALSE, row.names=FALSE)
+write.table(res2,"Data/Multimodal/boxplotS_d20_M100_T10p5.txt",col.names=FALSE, row.names=FALSE)
 #####################################################################################
-## G-PFSO: 100 runs with T=10^5 and with c_sigma=3
+## G-PFSO: 100 runs with T=10^5 and with c_sigma=1
 #####################################################################################
 c_sigma<-3
 target$parameters$learning_rate[1]<-sqrt(c_sigma)
@@ -142,9 +140,9 @@ for(m in 1:M){
    print(res2[m])
 }
 ##save data for Figure 3(a)
-#write.table(res2,"Data/Multimodal/boxplotS_d20_M100_T10p5_var3.txt",col.names=FALSE, row.names=FALSE)
+write.table(res2,"Data/Multimodal/boxplotS_d20_M100_T10p5_var3.txt",col.names=FALSE, row.names=FALSE)
 #####################################################################################
-## G-PFSO: 100 runs with T=10^5 and with c_sigma=3
+## G-PFSO: 100 runs with T=10^5 and with c_sigma=1
 #####################################################################################
 c_sigma<-1
 target$parameters$learning_rate[1]<-sqrt(c_sigma)
@@ -162,11 +160,33 @@ for(m in 1:M){
    print(res2[m])
 }
 ##save data for Figure 3(a)
-#write.table(res2,"Data/Multimodal/boxplotS_d20_M100_T10p5_var1.txt",col.names=FALSE, row.names=FALSE)
-
-
+write.table(res2,"Data/Multimodal/boxplotS_d20_M100_T10p5_var1.txt",col.names=FALSE, row.names=FALSE)
 #####################################################################################
-## OPSMC: 100 runs with T=10^5 and with as in the paper.
+## G-PFSO: 100 runs with T=10^5, c_sigma=1 and heavier Student's tails
+####################################################################################
+
+c_sigma<-1
+target$parameters$nu<-1.5
+target$parameters$learning_rate[1]<-sqrt(c_sigma)
+ 
+
+set.seed(30485)
+T_end<-10^5
+M<-100
+res1<-rep(0,M)
+res2<-rep(0,M)
+for(m in 1:M){
+   theta<-GPFSO_multi(tuning_parameters, target , observations[1:T_end,], cl=1, seed=sample(1:10^5,1))
+   bar_mean<-apply(theta$MEAN,2,cumsum)/(1:nrow(theta$MEAN))
+   res1[m]<-sum((bar_mean[T_end,]-theta_star)^2)^{1/2} 
+   res2[m]<-max(abs(bar_mean[T_end,]-theta_star))
+   print(m)
+   print(res2[m])
+}
+##save data for Figure 3(a)
+write.table(res2,"Data/Multimodal/boxplotS_d20_M100_T10p5_var1_stud.txt",col.names=FALSE, row.names=FALSE)
+#####################################################################################
+## OPSMC: 100 runs with T=10^5 and iota as in the paper.
 #####################################################################################                         
 set.seed(30485)
 T_end<-10^5
@@ -180,20 +200,7 @@ for(m in 1:M){
    print(m)
 }
 ##save data for Figure 3(a)
-#write.table(res2,"Data/Multimodal/OPSMC_boxplotS_d20_M100_T10p5.txt",col.names=FALSE, row.names=FALSE)
-
-
-
-
-
-
-
-
-
-
-
-
-
+write.table(res2,"Data/Multimodal/OPSMC_boxplotS_d20_M100_T10p5.txt",col.names=FALSE, row.names=FALSE)
 
 
 

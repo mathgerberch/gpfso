@@ -9,7 +9,7 @@ library(latex2exp)
 
 
 ###############################################################################################
-#Figure 1
+#Table 1
 ###############################################################################################
 g<-function(x) x/(1+x)
 pi.tilde<-function(c, alpha,y,sigma0=5,mu0=0, gamma=1){
@@ -59,9 +59,7 @@ lm(errorB ~log(start:n))$coef
 #CQR model
 ###############################################################################################
 
-#####figure 2(a)#################
-
-
+#####figure 1(a)#################
 S1<-read.table("Data/CQR/ADA_BoxplotS_d5_q50.txt")$V1
 S2<-read.table("Data/CQR/ADA_BoxplotS_d5_q99.txt")$V1
 
@@ -76,17 +74,14 @@ p1<-ggplot(data = all, aes(x=dataset, y=value)) + geom_boxplot(aes(fill=dataset)
     #scale_y_log10(limits = c(0.04,0.16), breaks = c( 10^{-1.5},10^{-1.25}, 10^{-1}),labels = trans_format("log10", math_format(10^.x)))+
     ylab("estimation error") +scale_x_discrete(labels=c('1' = expression(tau==0.5), '2'=expression(tau==0.99)))
     
-#figure 2(a)
+#figure 1(a)
 p1
 
+##########figure 1(b)##################################
+errorE<-read.table("Data/CQR/errorE_d5_q5_M20.txt")$V1  
+errorE_jit<-read.table("Data/CQR/errorE_d5_q5_jit_M20.txt")$V1  
 
-
-
-
-##########figure 2(b)##################################
-errorE<-read.table("Data/CQR/errorE_d5_q5_M20.txt")$V1
-errorE_jit<-read.table("Data/CQR/errorE_d5_q5_jit_M20.txt")$V1
-tr<-read.table("Data/CQR/tr_d5_q5.txt")$V1 #time instants at which above quantities are computed
+tr<-read.table("Data/CQR/tr_d5.txt")$V1 #time instants at which above quantities are computed
 T_end<-length(tr) 
 
 
@@ -98,18 +93,15 @@ work<-(tr)^{-beta}
 c<-error[T_end]/work[T_end]
 work<-c*work
 
-
-
 df<- data.frame(Method= factor(c(rep("1", T_end),rep("2", T_end),rep("3", T_end) )),
 		axis	 	= c(tr),
                 res 		= c(error,error_jit, work )
 		)
 
 
-
 p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_line(size=1.5)+
 	scale_x_log10(limits = c(1,max(tr)),breaks = c(10^1,10^{3},10^5,10^7  ), labels = trans_format("log10", math_format(10^.x)))+
-	scale_y_log10(limits = c(10^{-3}, 22), breaks = c(10^{-3},10^{-2},10^{-1},10^0,10^1   ),labels = trans_format("log10", math_format(10^.x)))+
+	scale_y_log10(limits = c(10^{-2.5}, 10^1.5), breaks = c(10^{-2},10^{-1},10^0,10^1   ),labels = trans_format("log10", math_format(10^.x)))+
 	xlab("sample size t") +ylab("estimation error") +theme_bw()+
         theme(legend.title=element_blank())+theme(legend.position="bottom")+
 	theme(axis.text=element_text(size=30, colour="black"),
@@ -117,19 +109,19 @@ p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_l
 	scale_linetype_manual(values=c(1, 2,3))+
         scale_size_manual(values=c(0.1,2))+
 	theme(legend.key.size = unit(1.2, "cm"))+ theme(legend.position = 'none')+
-        annotate("text", x = 10^{0.7}, y = 10^{-0},  label = expression(t^{-0.5}), size=15)
+        annotate("text", x = 10^{0.7}, y = 10^{-0.2},  label = expression(t^{-0.5}), size=15)
 
 
-#figure 2(b)
+#figure 1(b)
 p1
 
 
-##########figure 2(c)##################################
+##########figure 1(c)##################################
 errorE<-read.table("Data/CQR/errorE_d5_q99_M20.txt")$V1 #Euclidian norm
 errorE3<-read.table("Data/CQR/errorE_d5_q99_M20_a3.txt")$V1 #Euclidian norm
 
 
-tr<-read.table("Data/CQR/tr_d5_q99.txt")$V1 #time instants at which above quantities are computed
+tr<-read.table("Data/CQR/tr_d5.txt")$V1 #time instants at which above quantities are computed
 T_end<-length(tr) 
 
 
@@ -158,7 +150,7 @@ df<- data.frame(Method= factor(c(rep("1", T_end),rep("2", T_end),rep("3", T_end)
 
 p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_line(size=1.5)+
 	scale_x_log10(limits = c(1,max(tr)),breaks = c(10^1,10^{3},10^5,10^7  ), labels = trans_format("log10", math_format(10^.x)))+
-	scale_y_log10(limits = c(10^{-2}, 10^2), breaks = c( 10^{-2},10^{-1},10^{0},10^1, 10^2   ),labels = trans_format("log10", math_format(10^.x)))+
+	scale_y_log10(limits = c(10^{-2.5}, 10^1.5), breaks = c(10^{-2}, 10^{-2},10^{-1},10^{0},10^1),labels = trans_format("log10", math_format(10^.x)))+
 	xlab("sample size t") +ylab("estimation error") +theme_bw()+
         theme(legend.title=element_blank())+theme(legend.position="bottom")+
 	theme(axis.text=element_text(size=30, colour="black"),
@@ -166,50 +158,49 @@ p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_l
 	scale_linetype_manual(values=c(1, 2,3,3))+
         scale_size_manual(values=c(0.1,2))+
 	theme(legend.key.size = unit(1.2, "cm"))+ theme(legend.position = 'none')+
-         annotate("text", x = 10^{4.4}, y = 10^{-1.2},  label = expression(t^{-0.5}), size=15)+
-         annotate("text", x = 10^{0.5}, y = 10^{0.5},  label = expression(t^{-0.3}), size=15)
+         annotate("text", x = 10^{4.3}, y = 10^{-1.3},  label = expression(t^{-0.5}), size=15)+
+         annotate("text", x = 10^{0.5}, y = 10^{0.4},  label = expression(t^{-0.3}), size=15)
 
 
-#figure 2(c)
+#figure 1(c)
 p1
  
-
 
 ###############################################################################################
 #Toy Multimodal Example
 ###############################################################################################
 
+###########figure 2(a)##################################
 
-###########figure 3(a)##################################
-
-
-S1<-read.table("Data/Multimodal/boxplotS_d20_M100_T10p5.txt")$V1
-S2<-read.table("Data/Multimodal/boxplotS_d20_M100_T10p5_var3.txt")$V1
-S3<-read.table("Data/Multimodal/boxplotS_d20_M100_T10p5_var1.txt")$V1
-S4<-read.table("Data/Multimodal/OPSMC_boxplotS_d20_M100_T10p5.txt")$V1
-
+S1<-read.table("Data/Multimodal/OPSMC_boxplotS_d20_M100_T10p5.txt")$V1
+S2<-read.table("Data/Multimodal/boxplotS_d20_M100_T10p5.txt")$V1
+S3<-read.table("Data/Multimodal/boxplotS_d20_M100_T10p5_var3.txt")$V1
+S4<-read.table("Data/Multimodal/boxplotS_d20_M100_T10p5_var1.txt")$V1
+S5<-read.table("Data/Multimodal/boxplotS_d20_M100_T10p5_var1_stud.txt")$V1
  
-all<-data.frame(dataset=c(rep('1',length(S4)) ,rep('2',length(S1)) ,rep('3',length(S2)) ,rep('4',length(S3))),value=c(S4,S1,S2,S3))
+ 
+all<-data.frame(dataset=c(rep('1',length(S1)) ,rep('2',length(S2)),rep('3',length(S3))  ,rep('4',length(S4)) ,rep('5',length(S5))),value=c(S1,S2,S3,S4,S5))
 
 p1<-ggplot(data = all, aes(x=dataset, y=value)) + geom_boxplot(aes(fill=dataset))+theme_bw()+
     labs(y = " ") + theme(legend.position = 'none')+xlab(" ")+
-    scale_fill_manual(values=c("white","white","grey","gray35"))+
+    scale_fill_manual(values=c("white","white","white","white","white"))+
     theme(axis.text=element_text(size=30, colour="black"),
         axis.title=element_text(size=35))+theme(legend.text=element_text(size=25))+
-    scale_y_log10(limits = c(0.03,10), breaks = c(10^{-2}, 10^{-1},10^{0}, 10),labels = trans_format("log10", math_format(10^.x)))+
+    scale_y_log10(limits = c(0.03,5), breaks = c(10^{-2}, 10^{-1},10^{0}, 10),labels = trans_format("log10", math_format(10^.x)))+
     ylab("estimation error")  +scale_x_discrete(labels=c('1' = expression(theta["K,T'"]^N), 
-          '2'= expression(bar(theta)["T'"]^N), '3'=expression(bar(theta)["T'"]^N), '4'=expression(bar(theta)["T'"]^N)))
-    
+          '2'= expression(bar(theta)["T'"]^N), '3'=expression(bar(theta)["T'"]^N), '4'=expression(bar(theta)["T'"]^N), '5'=expression(bar(theta)["T'"]^N)))
+   
  
-#figure 3(a)
+#figure 2(a)
 p1
- 
 
-##########figure 3(b)##################################
 
-E1<-read.table("Data/Multimodal/traj_theta1_d20.txt")$V1
-T_end<-length(E1)
-points<-1000:T_end
+
+##########figure 2(b)##################################
+
+E1<-read.table("Data/Multimodal/traj_theta5_d20.txt")$V1
+T_end<-30000
+points<-100:T_end
 
 df<- data.frame(Method= factor(c(rep("1", length(points)))),
 		axis	 	= c(points),
@@ -219,23 +210,20 @@ df<- data.frame(Method= factor(c(rep("1", length(points)))),
 
 
 p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_line(size=0.2)+
-	xlab("sample size t") +ylab(expression(theta[1])) +theme_bw()+scale_x_continuous(limits=c(1000,10500))+
+	xlab("sample size t") +ylab(expression(theta[5])) +theme_bw()+scale_x_continuous(limits=c(1000,T_end))+
         theme(legend.title=element_blank())+theme(legend.position="bottom")+
 	theme(axis.text=element_text(size=30, colour="black"),
         axis.title=element_text(size=35))+theme(legend.text=element_text(size=30))+
 	scale_linetype_manual(values=c(1, 3))+
         scale_size_manual(values=c(0.1,2))+
 	theme(legend.key.size = unit(1.2, "cm"))+ theme(legend.position = 'none')+geom_hline(yintercept=-1)
-        
-#figure 3(b)
-p1
+     
  
+#figure 2(b)
+p1
 
-
-###########figure 3(c)##################################
+###########figure 2(c)##################################
 errorE<-read.table("Data/Multimodal/errorE_d20_M10.txt")$V1 #Euclidian norm
-errorE2<-read.table("Data/Multimodal/errorE_d20_M10_alpha03.txt")$V1 #Euclidian norm
-errorE3<-read.table("Data/Multimodal/PSMC0_errorE_d20_M10.txt")$V1 #Euclidian norm
 tr<-read.table("Data/Multimodal/tr_d20.txt")$V1 #time instants at which above quantities are computed
 T_end<-length(tr) 
 error<-errorE
@@ -269,22 +257,21 @@ p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_l
 	theme(legend.key.size = unit(1.2, "cm"))+ theme(legend.position = 'none')+
          annotate("text", x = 10^{0.7}, y = 10^{1},  label = expression(t^{-0.5}), size=15)
  
-#figure 3(c)
+#figure 2(c)
 p1
- 
 
 ###############################################################################################
 #SAGM model
 ###############################################################################################
 
-###########figure 4(a)##################################
+###########figure 3(a)##################################
 
 S1<-read.table("Data/Mixture/BoxplotS_M100.txt")$V1
 tS1<-read.table("Data/Mixture/tBoxplotS_M100.txt")$V1
 S2<-read.table("Data/Mixture/BoxplotS_M100_T10p5.txt")$V1
 tS2<-read.table("Data/Mixture/tBoxplotS_M100_T10p5.txt")$V1
-tS3<-read.table("Data/Mixture/PSMCO_tBoxplotS_M100_iota005_N30000.txt")$V1 
-tS4<-read.table("Data/Mixture/PSMCO_tBoxplotS_M100_iota005_N30000_T10p5.txt")$V1
+tS3<-read.table("Data/Mixture/tBoxplotS_M100_st.txt")$V1 
+tS4<-read.table("Data/Mixture/tBoxplotS_M100_T10p5_st.txt")$V1
 
 
  
@@ -294,23 +281,22 @@ all<-data.frame(dataset=c(rep('1',length(S1)),rep('2',length(tS1)),rep('3',lengt
 
 p1<-ggplot(data = all, aes(x=dataset, y=value)) + geom_boxplot(aes(fill=dataset))+theme_bw()+
     labs(y = " ") + theme(legend.position = 'none')+xlab(" ")+
-    scale_fill_manual(values=c("white","white","white","white","white","white"))+theme( axis.text.x = element_text(size = 30))+
+    scale_fill_manual(values=c("white","white","white","white","grey","grey"))+theme( axis.text.x = element_text(size = 30))+
     theme(axis.text=element_text(size=30, colour="black"),
         axis.title=element_text(size=35))+theme(legend.text=element_text(size=25))+
-    scale_y_log10(limits = c(0.035,10), breaks = c( 10^{-1.5},10^{-0.5},   10^0.5),labels = trans_format("log10", math_format(10^.x)))+
+    scale_y_log10(limits = c(0.035,91), breaks = c( 10^{-1.5},10^{-0.5},   10^0.5),labels = trans_format("log10", math_format(10^.x)))+
     ylab("estimation error")   +scale_x_discrete(labels=c('1'= expression(bar(theta)[T[1]]^N), '2'=expression(tilde(theta)[T[1]]^N), 
-    '3'=expression(bar(theta)[T[2]]^N),'4'=expression(tilde(theta)[T[2]]^N),'5'= expression(theta["Jit,T"[1]]^N),
-           '6'= expression(theta["Jit,T"[2]]^N)))
+    '3'=expression(bar(theta)[T[2]]^N),'4'=expression(tilde(theta)[T[2]]^N),'5'= expression(tilde(theta)[T[1]]^N),
+           '6'= expression(tilde(theta)[T[2]]^N)))
     
-#figure 4(a)
+#figure 3(a)
 p1
 
-
-
-######figure 4(b)#################
+######figure 3(b)#################
 theta_star<-read.table("Data/Mixture/theta_star.txt")$V1
 E1<-read.table("Data/Mixture/traj_6.txt")$V1
-E1<-E1[1:60000]
+k<-6
+E1<-E1[1:100000]
 T_end<-length(E1)
 points<-1:T_end
 
@@ -326,15 +312,15 @@ p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_l
         theme(legend.title=element_blank())+theme(legend.position="bottom")+
 	theme(axis.text=element_text(size=30, colour="black"),
         axis.title=element_text(size=35))+theme(legend.text=element_text(size=30))+
-	scale_linetype_manual(values=c(1, 2))+geom_hline(yintercept=theta_star[6])+
+	scale_linetype_manual(values=c(1, 2))+geom_hline(yintercept=theta_star[k])+
         scale_size_manual(values=c(0.1,2))+
 	theme(legend.key.size = unit(1.2, "cm"))+ theme(legend.position = 'none')
          
 
-#figure 4(b)
+#figure 3(b)
 p1
- 
-######figure 4(c)#################
+
+######figure 3(c)#################
 
 error<-read.table("Data/Mixture/errorE_M5.txt")$V1
 tr<-read.table("Data/Mixture/tr.txt")$V1
@@ -358,7 +344,7 @@ df<- data.frame(Method= factor(c(rep("1", length(tr)),rep("3", length(tr)))),
 
 p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_line(size=1.5)+
 	scale_x_log10(limits = c(min(tr),max(tr)),breaks = c(10^5, 10^5.5,  10^6 ), labels = trans_format("log10", math_format(10^.x)))+
-	scale_y_log10(limits = c(0.015, 0.2), breaks = c(10^{-1.75}, 10^{-1.5} ,10^{-1.25},  10^{-1}, 10^{-0.75}),labels = trans_format("log10", math_format(10^.x)))+
+	scale_y_log10(limits = c(0.02, 0.13), breaks = c(10^{-1.75}, 10^{-1.5} ,10^{-1.25},  10^{-1}, 10^{-0.75}),labels = trans_format("log10", math_format(10^.x)))+
 	xlab("sample size t") +ylab("estimation error") +theme_bw()+
         theme(legend.title=element_blank())+theme(legend.position="bottom")+
 	theme(axis.text=element_text(size=30, colour="black"),
@@ -369,18 +355,14 @@ p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_l
          annotate("text", x = 10^{5.2}, y = 10^{-1.3},  label = expression(t^{-0.5}), size=15)
 
 
-#figure 4(c)
+#figure 3(c)
 p1
  
-
-
 
 ###############################################################################################
 #g and k distribution
 ###############################################################################################
-
-       
-######figure 5(a)#################
+######figure 4(a)#################
 
 library(winference)
 library(numDeriv)
@@ -453,11 +435,10 @@ p2 <- ggplot(df2) +  theme_bw()+labs(y = "density") + theme(legend.position = 'n
         axis.ticks.x=element_blank()) +coord_cartesian(xlim = c(-5,10), ylim=c(0,6)) 
         
                    
-#figure 5(a)                    
+#figure 4(a)                    
 grid.arrange(p1,p2, nrow=1)
-                 
-                   
-######figure 5(b)#################
+                         
+######figure 4(b)#################
 L1<-read.table("Data/g_and_k/errorS_Boxplot_nit10000.txt",)$V1
 L2<-read.table("Data/g_and_k/errorS_tBoxplot_nit10000.txt")$V1
 L3<-read.table("Data/g_and_k/errorS_Boxplot.txt",)$V1
@@ -465,28 +446,25 @@ L4<-read.table("Data/g_and_k/errorS_tBoxplot.txt",)$V1
 
 L5<-read.table("Data/g_and_k/errorS_Boxplot_alpha05.txt",)$V1
 L6<-read.table("Data/g_and_k/errorS_Boxplot_alpha05_c1_N500.txt")$V1
-L7<-read.table("Data/g_and_k/errorS_Boxplot_alpha05_c1.txt")$V1
       
 all<-data.frame(dataset=c(rep('1',length(L1)) ,rep('2',length(L2)), rep('3',length(L3)), rep('4',length(L4))   , 
-                         rep('5',length(L5))   ,rep('6',length(L6))   ,rep('7',length(L7))),value=c(L1,L2,L3,L4,L5,L6, L7))
+                         rep('5',length(L5))   ,rep('6',length(L6))),value=c(L1,L2,L3,L4,L5,L6))
 
 
 p1<-ggplot(data = all, aes(x=dataset, y=value)) + geom_boxplot(aes(fill=dataset))+theme_bw()+
     labs(y = " ") + theme(legend.position = 'none')+xlab(" ")+
-    scale_fill_manual(values=c("white","white","white","white","black","grey", "grey100"))+theme( axis.text.x = element_text(size = 30))+
+    scale_fill_manual(values=c("white","white","white","white","black","grey"))+theme( axis.text.x = element_text(size = 30))+
     theme(axis.text=element_text(size=30, colour="black"),
         axis.title=element_text(size=35))+theme(legend.text=element_text(size=25))+
     scale_y_log10(limits = c(0.01,10), breaks = c(10^{-2}, 10^{-1},10^{0},   10^1),labels = trans_format("log10", math_format(10^.x)))+
     ylab("estimation error")   +scale_x_discrete(labels=c('1'= expression(bar(theta)[T[1]]^N), '2'=expression(tilde(theta)[T[1]]^N), 
-    '3'=expression(bar(theta)[T[2]]^N),'4'=expression(tilde(theta)[T[2]]^N), '5'= expression(bar(theta)[T[2]]^N), '6'= expression(bar(theta)[T[2]]^N),
-     '7'= expression(bar(theta)[T[2]]^N)))
+    '3'=expression(bar(theta)[T[2]]^N),'4'=expression(tilde(theta)[T[2]]^N), '5'= expression(bar(theta)[T[2]]^N), '6'= expression(bar(theta)[T[2]]^N)))
         
-#figure 5(b)
+#figure 4(b)
 p1
- 
 
 
-######figure 5(c)#################
+######figure 4(c)#################
 
 errorE<-read.table("Data/g_and_k/errorE_c1_500.txt")$V1 #Euclidian norm
  
@@ -513,19 +491,18 @@ df<- data.frame(Method= factor(c(rep("1", T_end),rep("2", T_end) )),
 p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_line(size=1.5)+
 	scale_x_log10(limits = c(min(tr),max(tr)),breaks = c(10^{4},10^5,10^6  ), labels = trans_format("log10", math_format(10^.x)))+
 	scale_y_log10(limits = c(10^{-1.5}, 0.3), breaks = c(10^{-1.5}, 10^{-1.25}, 10^{-1},10^{-0.75}, 10^{-0.5}  ),labels = trans_format("log10", math_format(10^.x, format=force)))+
-	xlab("number of iterations t") +ylab("estimation error") +theme_bw()+
+	xlab("sample size t \n (pseudo-observations)") +ylab("estimation error") +theme_bw()+
         theme(legend.title=element_blank())+theme(legend.position="bottom")+
 	theme(axis.text=element_text(size=30, colour="black"),
         axis.title=element_text(size=35))+theme(legend.text=element_text(size=30))+
 	scale_linetype_manual(values=c( 1,3))+
         scale_size_manual(values=c(0.1,2))+
 	theme(legend.key.size = unit(1.2, "cm"))+ theme(legend.position = 'none')+ 
-        annotate("text", x = 10^{5.2}, y = 10^{-0.75},  label = expression(t^{-0.5}), size=15)
+        annotate("text", x = 10^{5.2}, y = 10^{-0.72},  label = expression(t^{-0.5}), size=15)
  
-#figure 5(c)
+#figure 4(c)
 p1
 
-                   
                    
                    
                    

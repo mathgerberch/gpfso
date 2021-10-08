@@ -12,47 +12,49 @@
 void SSPResampler(double* points, int* N,  double *W, int *J)
 {
 	int i,j,k, index1, index2;
-	double s;
-	double *proba=(double*)malloc(sizeof(double)*(*N));
+	double s,p1,p2;
 
 	j=0;
 	for(i=0;i<*N;i++)
 	{
-		for(k=0;k<floor(*N*W[i]); k++)
-		{
-			J[j]=i;
+	       for(k=0;k<floor(*N*W[i]); k++)
+	       {
+               	J[j]=i;
 			j++;
 		}
-		proba[i]=*N*W[i]-floor(*N*W[i]);
 	}
 
-	s=0;
-	index1=0;
-	index2=1;
-	for(i=0;i<*N-1;i++)
-	{
-		s=proba[index1]+proba[index2];
+        if(j<*N){
+	   s=0;
+	   index1=0;
+	   index2=1;
+	   p1=*N*W[index1]-floor(*N*W[index1]);
+	   for(i=0;i<*N;i++)
+	   {
+	        p2=*N*W[index2]-floor(*N*W[index2]);
+		s=p1+p2;
 		if(s<1.0)
 		{
-			if(points[i]<proba[index1]/s)
+			if(points[i]<p1/s)
 			{
-				proba[index1]=s;
+				p1=s;
 				index2++;
 			}
 			else
 			{
-				proba[index2]=s;
-				index1=index2;
-				index2++;
+			        index1=index2;
+				 p1=s;
+				 index2++;
 			}
 		}
 		else if(s==1)
 		{
-			if(points[i]<proba[index1])
+			if(points[i]<p1)
 			{
 				J[j]=index1;
 				index1=index2+1;
 				index2=index2+2;
+				p1=*N*W[index1]-floor(*N*W[index1]);
 				j++;
 			}
 			else
@@ -60,87 +62,87 @@ void SSPResampler(double* points, int* N,  double *W, int *J)
 				J[j]=index2;
 				index1=index2+1;
 				index2=index2+2;
+				p1=*N*W[index1]-floor(*N*W[index1]);
 				j++;
 			}
 		}
 		else
 		{
-			if(points[i]<(1.0-proba[index1])/(2.0-s))
+			if(points[i]<(1.0-p1)/(2.0-s))
 			{
-				proba[index1]=s-1.0;
+				p1=s-1.0;
 				J[j]=index2;
 				index2++;
 				j++;
 			}
 			else
 			{
-				proba[index2]=s-1.0;
-				J[j]=index1;
-				index1=index2;
+			        J[j]=index1;
+			        index1=index2;
+				p1=s-1.0;
 				index2++;
 				j++;
 			}
 		}
-		if(j==*N || index2>*N-1 || index1>*N-1)
+		if(index2==*N)
 		{
 			break;
 		}
+	   }
+	   if(j==*N-1)
+	   {
+		  J[*N-1]=index1;
+	   }
 	}
-	if(j<*N)
-	{
-		J[*N-1]=index1;
-	}
-	
-
-	free(proba);
-	proba=NULL;
 }
 
 
 void SSPResampler_R(double* points, int* N, double *W, double *J)
 {
 	int i,j,k, index1, index2;
-	double s;
-	double *proba=(double*)malloc(sizeof(double)*(*N));
+	double s,p1,p2;
 
 	j=0;
 	for(i=0;i<*N;i++)
 	{
-		for(k=0;k<floor(*N*W[i]); k++)
-		{
-			J[j]=i;
+	       for(k=0;k<floor(*N*W[i]); k++)
+	       {
+               	J[j]=i;
 			j++;
 		}
-		proba[i]=*N*W[i]-floor(*N*W[i]);
 	}
 
-	s=0;
-	index1=0;
-	index2=1;
-	for(i=0;i<*N-1;i++)
-	{
-		s=proba[index1]+proba[index2];
+        if(j<*N){
+	   s=0;
+	   index1=0;
+	   index2=1;
+	   p1=*N*W[index1]-floor(*N*W[index1]);
+	   for(i=0;i<*N;i++)
+	   {
+	        p2=*N*W[index2]-floor(*N*W[index2]);
+		s=p1+p2;
 		if(s<1.0)
 		{
-			if(points[i]<proba[index1]/s)
+			if(points[i]<p1/s)
 			{
-				proba[index1]=s;
+				p1=s;
 				index2++;
 			}
 			else
 			{
-				proba[index2]=s;
-				index1=index2;
-				index2++;
+			        index1=index2;
+				 p1=s;
+				 index2++;
 			}
 		}
 		else if(s==1)
 		{
-			if(points[i]<proba[index1])
+			if(points[i]<p1)
 			{
 				J[j]=index1;
 				index1=index2+1;
 				index2=index2+2;
+				p1=*N*W[index1]-floor(*N*W[index1]);
 				j++;
 			}
 			else
@@ -148,98 +150,39 @@ void SSPResampler_R(double* points, int* N, double *W, double *J)
 				J[j]=index2;
 				index1=index2+1;
 				index2=index2+2;
+				p1=*N*W[index1]-floor(*N*W[index1]);
 				j++;
 			}
 		}
 		else
 		{
-			if(points[i]<(1.0-proba[index1])/(2.0-s))
+			if(points[i]<(1.0-p1)/(2.0-s))
 			{
-				proba[index1]=s-1.0;
+				p1=s-1.0;
 				J[j]=index2;
 				index2++;
 				j++;
 			}
 			else
 			{
-				proba[index2]=s-1.0;
-				J[j]=index1;
-				index1=index2;
+			        J[j]=index1;
+			        index1=index2;
+				p1=s-1.0;
 				index2++;
 				j++;
 			}
 		}
-		if(j==*N || index2>*N-1 || index1>*N-1)
+		if(index2==*N)
 		{
 			break;
 		}
+	   }
+	   if(j==*N-1)
+	   {
+		  J[*N-1]=index1;
+	   }
 	}
-	if(j<*N)
-	{
-		J[*N-1]=index1;
-	}
-	
-
-	free(proba);
-	proba=NULL;
 }
-
-
- 
-void SGD_multi(int *d, double *theta_in, int *n_val, int *datalength, double *alpha,   double *observations, double *res){
-    
-    int t,k,m;
-    double mu, step, grad;
-    
-    double *work=(double*)malloc(sizeof(double)*(*d));
-    
-    for(m=0; m<*n_val; m++){
-
-      for(k=0; k<*d;k++){
-          res[*d*m*2+k]=theta_in[*d*m+k];
-          res[*d*m*2+*d+k]=0;
-      }
-    
-      for(t=0; t<*datalength; t++){       
-          mu=0;
-          for(k=0; k<*d; k++){
-              work[k]=exp(-observations[(*d+1)*t+(k+1)]*pow(res[*d*m*2+k], 2.0));
-	      mu+=work[k]+observations[(*d+1)*t+(k+1)]*res[*d*m*2+*d-k-1];
-          }
-          if(observations[(*d+1)*t]>= mu){
-              step= alpha[0]/pow(t+1.0,alpha[1]);
-          }else{
-              step= -alpha[0]/pow(t+1.0,alpha[1]);
-          }
-         
-          for(k=0;k<*d;k++){
-             grad= -2.0*observations[(*d+1)*t+(k+1)]*res[*d*m*2+k]*work[k]+observations[(*d+1)*t+*d-k];
-             res[*d*m*2+k]+=step*grad;
-          }
-          for(k=0;k<*d;k++){
-              //projection on Theta
-              if(res[*d*m*2+k]> 19.0){
-                 res[*d*m*2+k]= 19.0;
-              }
-              if(res[*d*m*2+k]< -21.0){
-                 res[*d*m*2+k]= -21.0;
-              }
-              res[*d*m*2+*d+k]+=res[*d*m*2+k];
-          } 
-
-      }
-      for(k=0;k<*d;k++){
-         res[*d*m*2+*d+k]/=*datalength;
-      }
-    }
-    free(work);
-    work=NULL;
-
-}
-
-
-
-
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -408,10 +351,6 @@ void censored_online(int *cl, double *q, double *ess_bound, double *mu, double *
 
 //////////////////////////////////////////////////////////////
 
-
-/////////////////////////////////////////////////////////////
-
-
                  
 void ADA_censored(double *quantile, double *epsilon, double *theta_in, int *M, int *d, int *datalength,  double *alpha,   double *observations, double *res)
 {
@@ -468,205 +407,15 @@ void ADA_censored(double *quantile, double *epsilon, double *theta_in, int *M, i
 
 
 
-
-void multimodal_PSMCO(int *cl, double *ess_bound,  int *seed, int *N, int *d,  int *datalength,  double *alpha,   double *observations, double *res){
-
-    omp_set_dynamic(0);     		
-    omp_set_num_threads(*cl);
-
-    int t, i, k;
-    double ess_val,  work;
-    double proba=1.0/pow(*N,0.5); 
-   
-    double bound1=-2.0, bound2= -1.0;
-    ess_val=*N;
-
-
-    double *theta=(double*)malloc(sizeof(double)*(*d*(*N)));
-    double *thetah=(double*)malloc(sizeof(double)*(*d*(*N)));
-    double *w=(double*)malloc(sizeof(double)*(*N));
-    double *W=(double*)malloc(sizeof(double)*(*N));
-    int *J=(int*)malloc(sizeof(int)*(*N));
-
-    gsl_rng * r = gsl_rng_alloc (gsl_rng_mt19937);
-    gsl_rng_set(r, *seed);
-
-    //sample from tilde{pi}_0
-    for(i=0; i<*N; i++){
-          for(k=0; k<*d; k++){
-               theta[*d*i+k]= bound1+  (bound2-bound1)*gsl_rng_uniform(r);
-          }
-    }
-    //Process observations 1
-    t=0;
-    //2.1 Compute the weights
-    #pragma omp parallel for private(work,k)
-    for(i=0; i<*N; i++){
-        work=0;
-        for(k=0;k<*d;k++){
-            if(theta[*d*i+k]<bound1 || theta[*d*i+k]>bound2){
-               work=1.0;
-            }
-        }
-        if(work==1.0){
-           w[i]= -INFINITY;
-        }
-        else{
-          work=observations[(*d+1)*t];
-          for(k=0; k<*d; k++){
-	        work+= -exp(-observations[(*d+1)*t+(k+1)]*pow(theta[*d*i+k], 2.0))-observations[(*d+1)*t+(k+1)]*theta[*d*i+*d-k-1];
-          }
-         w[i]=-0.5*fabs(work);   
-        }
-    }
-    work=weight(w,  W, *N);
-    //Compute the ESS
-    ess_val=0;
-    for(i=0;i<*N;i++){
-            ess_val+=W[i]*W[i];
-    }
-    ess_val=1.0/ess_val;
-    //Compute the theta_tilde
-    for(k=0; k<*d;k++){
-         res[*d*t+k]=0;
-         for(i=0;i<*N;i++){
-              res[*d*t+k]+=W[i]*theta[*d*i+k];
-         }
-    }
-   
-    //Process other observations
-    for(t=1; t<*datalength;  t++)
-    {
-             if(ess_val> *ess_bound){ //no resampling
-                for(i=0; i<*N; i++){
-                     if(gsl_rng_uniform(r)<proba){
-                       for(k=0; k<*d;k++){
-                           theta[*d*i+k]+= *alpha*gsl_ran_gaussian(r,1.0);
-                       }
-                    }
-                }
-                #pragma omp parallel for private(work,k)
-                for(i=0; i<*N; i++){
-                   work=0;
-                   for(k=0;k<*d;k++){
-                      if(theta[*d*i+k]<bound1 || theta[*d*i+k]>bound2){
-                        work=1.0;
-                      }
-                   }
-                   if(work==1.0){
-                      w[i]= -INFINITY;
-                   }
-                   else{
-                     work=observations[(*d+1)*t];
-                     for(k=0; k<*d; k++){
-	                work+= -exp(-observations[(*d+1)*t+(k+1)]*pow(theta[*d*i+k], 2.0))-observations[(*d+1)*t+(k+1)]*theta[*d*i+*d-k-1];
-                     }
-                     w[i]+=-0.5*fabs(work);  
-                   }      
-                }
-                work=weight(w,  W, *N);
-           }
-           else{//resampling
-                for(i=0; i<*N; i++){
-                      w[i]=gsl_rng_uniform(r);
-                }
-                
-                SSPResampler(w,  N, W, J);
-
-               // #pragma omp parallel for private(k)
-                for(i=0; i<*N; i++){
-                      for(k=0; k<*d;k++){
-                          thetah[*d*i+k]=theta[*d*J[i]+k];
-                      }
-                }
-                  
-                for(i=0; i<*N; i++){
-                     if(gsl_rng_uniform(r)<proba){
-                        for(k=0; k<*d;k++){
-                           theta[*d*i+k]=thetah[*d*i+k]+*alpha*gsl_ran_gaussian(r,1.0);
-                        }
-                     }
-                     else{
-                        for(k=0; k<*d;k++){
-                           theta[*d*i+k]=thetah[*d*i+k];
-                        }   
-                    }
-                 }
-                 #pragma omp parallel for private(work,k)
-                  for(i=0; i<*N; i++){
-                    work=0;
-                    for(k=0;k<*d;k++){
-                      if(theta[*d*i+k]<bound1 || theta[*d*i+k]>bound2){
-                         work=1.0;
-                      }
-                    }
-                    if(work==1.0){
-                       w[i]= -INFINITY;
-                    }
-                    else{
-                       work=observations[(*d+1)*t];
-                       for(k=0; k<*d; k++){
-	                  work+= -exp(-observations[(*d+1)*t+(k+1)]*pow(theta[*d*i+k], 2.0))-observations[(*d+1)*t+(k+1)]*theta[*d*i+*d-k-1];
-                       }
-                       w[i]=-0.5*fabs(work);   
-                   }  
-                }
-                work=weight(w,  W, *N);
-            }
-
-            ess_val=0;
-            for(i=0;i<*N;i++){
-                 ess_val+=W[i]*W[i];
-            }
-            ess_val=1.0/ess_val;
-
-            for(k=0; k<*d;k++){
-                  res[*d*t+k]=0;
-                   for(i=0;i<*N;i++){
-                       res[*d*t+k]+=W[i]*theta[*d*i+k];
-                   }
-            }                   
-   }
-    free(theta);
-    theta=NULL;
-    free(thetah);
-    thetah=NULL;
-    free(w);
-    w=NULL;
-    free(W);
-    W=NULL;
-    free(J);
-    J=NULL;
-    gsl_rng_free(r);
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//////////////////////////////////////////////////////////////
-
 void censored_online_jitter(int *cl, double *q, double *ess_bound, double *mu, double *sigma, int *seed, int *N, int *d, int *datalength, 
                    double *alpha,  double *observations, double *res){
 
     omp_set_dynamic(0);     		
     omp_set_num_threads(*cl);
 
-    int t, i, k,  T_max;
+    int t, i, k;
     double ess_val, h_t, work;
     double proba=1.0/pow(*N,0.5);
-    T_max=*datalength;
     ess_val=*N;
 
 
@@ -676,7 +425,6 @@ void censored_online_jitter(int *cl, double *q, double *ess_bound, double *mu, d
     double *W=(double*)malloc(sizeof(double)*(*N));
     int *J=(int*)malloc(sizeof(int)*(*N));
 
-    //MTRand r = seedRand(*seed);
 
     gsl_rng * r = gsl_rng_alloc (gsl_rng_mt19937);
     gsl_rng_set(r, *seed);
@@ -718,7 +466,7 @@ void censored_online_jitter(int *cl, double *q, double *ess_bound, double *mu, d
     }
    
     //Process other observations
-    for(t=1; t<T_max; t++)
+    for(t=1; t<*datalength; t++)
     {
              if(ess_val> *ess_bound){ //no resampling
                  for(i=0; i<*N; i++){

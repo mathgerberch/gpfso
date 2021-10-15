@@ -1,14 +1,14 @@
 
 
 
-OPSMC<-function(tuning_parameters,  target, observations,scale_var=1, alpha=-1, cl=1){
+OPSMC<-function(tuning_parameters,  target, observations,scale_var=1, iota=-1, cl=1){
   N<- tuning_parameters$N
   d<-target$dimension
   ESS_bound<- N*tuning_parameters$c_ess
   if(alpha< 0){
       bN <- (4/((d+2)*N))^{2/(d+4)}
   }else{
-      bN<- alpha
+      bN<- iota^2
   }      
   rho<-sqrt(1-bN)
   d<-target$dimension

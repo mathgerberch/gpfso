@@ -1,8 +1,6 @@
 # options
 CFLAGS= -fpic -O3 -pipe -g -c -fopenmp -frounding-math 
 
-
-
 all: lib/gpfso.so 
 
 

@@ -102,7 +102,7 @@ df<- data.frame(Method= factor(c(rep("1", T_end),rep("2", T_end),rep("3", T_end)
 p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_line(size=1.5)+
 	scale_x_log10(limits = c(1,max(tr)),breaks = c(10^1,10^{3},10^5,10^7  ), labels = trans_format("log10", math_format(10^.x)))+
 	scale_y_log10(limits = c(10^{-2.5}, 10^1.5), breaks = c(10^{-2},10^{-1},10^0,10^1   ),labels = trans_format("log10", math_format(10^.x)))+
-	xlab("sample size t") +ylab("estimation error") +theme_bw()+
+	xlab("iteration t \n (true observations)") +ylab("estimation error") +theme_bw()+
         theme(legend.title=element_blank())+theme(legend.position="bottom")+
 	theme(axis.text=element_text(size=30, colour="black"),
         axis.title=element_text(size=35))+theme(legend.text=element_text(size=30))+
@@ -151,7 +151,7 @@ df<- data.frame(Method= factor(c(rep("1", T_end),rep("2", T_end),rep("3", T_end)
 p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_line(size=1.5)+
 	scale_x_log10(limits = c(1,max(tr)),breaks = c(10^1,10^{3},10^5,10^7  ), labels = trans_format("log10", math_format(10^.x)))+
 	scale_y_log10(limits = c(10^{-2.5}, 10^1.5), breaks = c(10^{-2}, 10^{-2},10^{-1},10^{0},10^1),labels = trans_format("log10", math_format(10^.x)))+
-	xlab("sample size t") +ylab("estimation error") +theme_bw()+
+	xlab("iteration t \n (true observations)") +ylab("estimation error") +theme_bw()+
         theme(legend.title=element_blank())+theme(legend.position="bottom")+
 	theme(axis.text=element_text(size=30, colour="black"),
         axis.title=element_text(size=35))+theme(legend.text=element_text(size=30))+
@@ -164,8 +164,8 @@ p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_l
 
 #figure 1(c)
 p1
- 
 
+ 
 ###############################################################################################
 #Toy Multimodal Example
 ###############################################################################################
@@ -210,7 +210,7 @@ df<- data.frame(Method= factor(c(rep("1", length(points)))),
 
 
 p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_line(size=0.2)+
-	xlab("sample size t") +ylab(expression(theta[5])) +theme_bw()+scale_x_continuous(limits=c(1000,T_end))+
+	xlab("iteration t \n (true observations)") +ylab(expression(theta[5])) +theme_bw()+scale_x_continuous(limits=c(1000,T_end))+
         theme(legend.title=element_blank())+theme(legend.position="bottom")+
 	theme(axis.text=element_text(size=30, colour="black"),
         axis.title=element_text(size=35))+theme(legend.text=element_text(size=30))+
@@ -248,7 +248,7 @@ df<- data.frame(Method= factor(c(rep("1", T_end),rep("3", T_end) )),
 p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_line(size=1.5)+
 	scale_x_log10(limits = c(1,max(tr)),breaks = c(10^1,10^{3},10^5 ), labels = trans_format("log10", math_format(10^.x)))+
 	scale_y_log10(limits = c(0.08, 10^2), breaks = c( 10^{-1},10^{0},10^1, 10^2   ),labels = trans_format("log10", math_format(10^.x)))+
-	xlab("sample size t") +ylab("estimation error") +theme_bw()+
+	xlab("iteration t \n (true observations)") +ylab("estimation error") +theme_bw()+
         theme(legend.title=element_blank())+theme(legend.position="bottom")+
 	theme(axis.text=element_text(size=30, colour="black"),
         axis.title=element_text(size=35))+theme(legend.text=element_text(size=30))+
@@ -259,6 +259,7 @@ p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_l
  
 #figure 2(c)
 p1
+
 
 ###############################################################################################
 #SAGM model
@@ -308,7 +309,7 @@ df<- data.frame(Method= factor(c( rep("1", length(points)))),
 
 
 p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_line(size=1)+
-	xlab("sample size t (in thousands)") +ylab(expression(theta[6])) +theme_bw()+scale_x_continuous(breaks = c(0, 20000,40000,60000,80000, 100000), labels=c("0","20","40", "60", "80","100"))+
+	xlab("iteration t \n (true observations)") +ylab(expression(theta[6])) +theme_bw()+scale_x_continuous(breaks = c(0, 20000,40000,60000,80000, 100000), labels=c("0","20","40", "60", "80","100"))+
         theme(legend.title=element_blank())+theme(legend.position="bottom")+
 	theme(axis.text=element_text(size=30, colour="black"),
         axis.title=element_text(size=35))+theme(legend.text=element_text(size=30))+
@@ -319,6 +320,7 @@ p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_l
 
 #figure 3(b)
 p1
+
 
 ######figure 3(c)#################
 
@@ -345,7 +347,7 @@ df<- data.frame(Method= factor(c(rep("1", length(tr)),rep("3", length(tr)))),
 p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_line(size=1.5)+
 	scale_x_log10(limits = c(min(tr),max(tr)),breaks = c(10^5, 10^5.5,  10^6 ), labels = trans_format("log10", math_format(10^.x)))+
 	scale_y_log10(limits = c(0.02, 0.13), breaks = c(10^{-1.75}, 10^{-1.5} ,10^{-1.25},  10^{-1}, 10^{-0.75}),labels = trans_format("log10", math_format(10^.x)))+
-	xlab("sample size t") +ylab("estimation error") +theme_bw()+
+	xlab("iteration t \n (true observations)") +ylab("estimation error") +theme_bw()+
         theme(legend.title=element_blank())+theme(legend.position="bottom")+
 	theme(axis.text=element_text(size=30, colour="black"),
         axis.title=element_text(size=35))+theme(legend.text=element_text(size=30))+
@@ -358,7 +360,6 @@ p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_l
 #figure 3(c)
 p1
  
-
 ###############################################################################################
 #g and k distribution
 ###############################################################################################
@@ -491,7 +492,7 @@ df<- data.frame(Method= factor(c(rep("1", T_end),rep("2", T_end) )),
 p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_line(size=1.5)+
 	scale_x_log10(limits = c(min(tr),max(tr)),breaks = c(10^{4},10^5,10^6  ), labels = trans_format("log10", math_format(10^.x)))+
 	scale_y_log10(limits = c(10^{-1.5}, 0.3), breaks = c(10^{-1.5}, 10^{-1.25}, 10^{-1},10^{-0.75}, 10^{-0.5}  ),labels = trans_format("log10", math_format(10^.x, format=force)))+
-	xlab("sample size t \n (pseudo-observations)") +ylab("estimation error") +theme_bw()+
+	xlab("iteration t \n (pseudo-observations)") +ylab("estimation error") +theme_bw()+
         theme(legend.title=element_blank())+theme(legend.position="bottom")+
 	theme(axis.text=element_text(size=30, colour="black"),
         axis.title=element_text(size=35))+theme(legend.text=element_text(size=30))+
@@ -502,11 +503,7 @@ p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_l
  
 #figure 4(c)
 p1
-
-                   
-                   
-                   
-                   
+       
                    
                    
                    

@@ -175,7 +175,7 @@ rm(proba,mu1,mu2,sigma1,sigma2,ind,X,Y)
 observations<-rbind(observations,observations2)
 rm(observations2)
 
-
+target$parameters$nu<-50
 T_end<-nrow(observations)
 M1<-5
 n_points<-10^5

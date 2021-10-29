@@ -254,7 +254,7 @@ write.table(res3, "Data/g_and_k/errorS_Boxplot_alpha05_c1_N500.txt",col.names=FA
 
 
 #####################################################################################
-# G-PFSO: 5 runs with 10^6 iterations (alpha,c_Sigma,N)=(0.5,1,500)
+# G-PFSO: 5 runs with 2*10^6 iterations (alpha,c_Sigma,N)=(0.5,1,500)
 ######################################################################################
 theta_star<-read.table("Data/g_and_k/mle.txt")$V1
 n_it2<-5*10^6

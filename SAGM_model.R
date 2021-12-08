@@ -103,21 +103,17 @@ write.table(res44,"Data/Mixture/tBoxplotS_M100.txt",col.names=FALSE, row.names=F
 #####################################################################################
 T_end<-2*10^5
 start_time <- Sys.time()
-theta<-GPFSO_mixture(N=5000, target, observations[1:T_end,], cl=1, seed=seed_vec[8])
+theta<-GPFSO_mixture(N=5000, target, observations[1:T_end,], cl=1, seed=seed_vec[64])
 end_time <- Sys.time()
 ##running time is
 print(end_time-start_time)
-k<-3
+k<-6
 plot(theta$MEAN[1000:T_end,k],type='l')
 abline(h=theta_star[k])
 
-k<-6
-plot(theta$MEAN[1:T_end,k],type='l')
-abline(h=theta_star[k])
 
 #Save data for Figure 4(b)
 write.table(theta$MEAN[,6],"Data/Mixture/traj_6.txt",col.names=FALSE, row.names=FALSE)
-
 #####################################################################################
 ## G-PFSO: 100 runs with T=10^5 iterations, student's with heavier tails
 ##################################################################################### 
@@ -175,8 +171,9 @@ rm(proba,mu1,mu2,sigma1,sigma2,ind,X,Y)
 observations<-rbind(observations,observations2)
 rm(observations2)
 
-target$parameters$nu<-50
+
 T_end<-nrow(observations)
+target$parameters$nu<-50
 M1<-5
 n_points<-10^5
 points<-seq(1,T_end, length.out=n_points)

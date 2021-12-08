@@ -196,6 +196,7 @@ void censored_online(int *cl, double *q, double *ess_bound, double *mu, double *
 
     int t, i, k,  T_max;
     double ess_val, h_t, work;
+    double sqrt_nu=pow(*nu,0.5);
   
     T_max=*datalength;
     ess_val=*N;
@@ -255,8 +256,9 @@ void censored_online(int *cl, double *q, double *ess_bound, double *mu, double *
              if(ess_val> *ess_bound){ //no resampling
                if(tp[t-1]==1){  //Student move
                  for(i=0; i<*N; i++){
+                       work=pow(gsl_ran_chisq(r, *nu),-0.5);
                        for(k=0; k<*d;k++){
-                           theta[*d*i+k]+=h_t*gsl_ran_tdist(r, *nu);
+                           theta[*d*i+k]+=h_t*gsl_ran_gaussian(r,1.0)*sqrt_nu*work;
                        }
                  }
               }
@@ -296,8 +298,9 @@ void censored_online(int *cl, double *q, double *ess_bound, double *mu, double *
                   
                 if(tp[t-1]==1){
                      for(i=0; i<*N; i++){
+                         work=pow(gsl_ran_chisq(r, *nu),-0.5);
                          for(k=0; k<*d;k++){
-                             theta[*d*i+k]=thetah[*d*i+k]+h_t*gsl_ran_tdist(r, *nu);
+                             theta[*d*i+k]=thetah[*d*i+k]+h_t*gsl_ran_gaussian(r,1.0)*sqrt_nu*work;
                          }
                      }
                 }
@@ -563,7 +566,7 @@ void GPFSO_multimodal(int *cl,  double *ess_bound, int *seed, int *N, int *d, do
 
     int t, i, k,  T_max;
     double ess_val, h_t, work;
-    
+    double sqrt_nu=pow(*nu,0.5);
    
     double bound1=-21, bound2=19;
     T_max=*datalength; 
@@ -623,16 +626,16 @@ void GPFSO_multimodal(int *cl,  double *ess_bound, int *seed, int *N, int *d, do
          }
 
     }
-   
-    //Process other observations
+   //Process other observations
     for(t=1; t<T_max; t++)
     {
              h_t=alpha[0]*pow(t,-alpha[1]);  //compute h_t
              if(ess_val> *ess_bound){ //no resampling
                if(tp[t-1]==1){  //Student move
                  for(i=0; i<*N; i++){
+                       work=pow(gsl_ran_chisq(r, *nu),-0.5);
                        for(k=0; k<*d;k++){
-                           theta[*d*i+k]+=h_t*gsl_ran_tdist(r, *nu);
+                           theta[*d*i+k]+=h_t*gsl_ran_gaussian(r,1.0)*sqrt_nu*work;
                        }
                  }
               }
@@ -680,8 +683,9 @@ void GPFSO_multimodal(int *cl,  double *ess_bound, int *seed, int *N, int *d, do
                   
                 if(tp[t-1]==1){
                      for(i=0; i<*N; i++){
+                         work=pow(gsl_ran_chisq(r, *nu),-0.5);
                          for(k=0; k<*d;k++){
-                             theta[*d*i+k]=thetah[*d*i+k]+h_t*gsl_ran_tdist(r, *nu);
+                             theta[*d*i+k]=thetah[*d*i+k]+h_t*gsl_ran_gaussian(r,1.0)*sqrt_nu*work;
                          }
                      }
                 }
@@ -1122,7 +1126,8 @@ void GPFSO_mixture_C(int *cl,  int *dobs, double *ess_bound, double *mu, double 
 
     int t, i, k, count;
     double ess_val, h_t, work, prob, m1,m2,sig1,sig2; 
-    ess_val=*N;
+    double sqrt_nu=pow(*nu,0.5);
+    
 
 
     double *theta=(double*)malloc(sizeof(double)*(*d*(*N)));
@@ -1190,7 +1195,6 @@ void GPFSO_mixture_C(int *cl,  int *dobs, double *ess_bound, double *mu, double 
               res[*d*t+k]+=W[i]*theta[*d*i+k];
          }
     }
-   
     //Process other observations
     for(t=1; t< *datalength; t++)
     {
@@ -1198,8 +1202,9 @@ void GPFSO_mixture_C(int *cl,  int *dobs, double *ess_bound, double *mu, double 
              if(ess_val> *ess_bound){ //no resampling
                if(tp[t-1]==1){  //Student move
                  for(i=0; i<*N; i++){
+                       work=pow(gsl_ran_chisq(r, *nu),-0.5);
                        for(k=0; k<*d;k++){
-                           theta[*d*i+k]+=h_t*gsl_ran_tdist(r, *nu);
+                           theta[*d*i+k]+=h_t*gsl_ran_gaussian(r,1.0)*sqrt_nu*work;
                        }
                  }
               }
@@ -1263,8 +1268,9 @@ void GPFSO_mixture_C(int *cl,  int *dobs, double *ess_bound, double *mu, double 
                   
                 if(tp[t-1]==1){
                      for(i=0; i<*N; i++){
+                         work=pow(gsl_ran_chisq(r, *nu),-0.5);
                          for(k=0; k<*d;k++){
-                             theta[*d*i+k]=thetah[*d*i+k]+h_t*gsl_ran_tdist(r, *nu);
+                             theta[*d*i+k]=thetah[*d*i+k]+h_t*gsl_ran_gaussian(r,1.0)*sqrt_nu*work;
                          }
                      }
                 }

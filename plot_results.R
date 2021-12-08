@@ -165,7 +165,7 @@ p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_l
 #figure 1(c)
 p1
 
- 
+
 ###############################################################################################
 #Toy Multimodal Example
 ###############################################################################################
@@ -195,12 +195,11 @@ p1<-ggplot(data = all, aes(x=dataset, y=value)) + geom_boxplot(aes(fill=dataset)
 p1
 
 
-
 ##########figure 2(b)##################################
 
-E1<-read.table("Data/Multimodal/traj_theta5_d20.txt")$V1
+E1<-read.table("Data/Multimodal/traj_theta14_d20.txt")$V1
 T_end<-30000
-points<-100:T_end
+points<-15000:T_end
 
 df<- data.frame(Method= factor(c(rep("1", length(points)))),
 		axis	 	= c(points),
@@ -210,7 +209,8 @@ df<- data.frame(Method= factor(c(rep("1", length(points)))),
 
 
 p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_line(size=0.2)+
-	xlab("iteration t \n (true observations)") +ylab(expression(theta[5])) +theme_bw()+scale_x_continuous(limits=c(1000,T_end))+
+	xlab("iteration t (in thousands) \n (true observations)") +ylab(expression(theta[14])) +theme_bw()+#scale_x_continuous(limits=c(1000,T_end))+
+	scale_x_continuous(breaks = c(15000,20000, 25000, 30000), labels=c("15","20","25", "30"))+
         theme(legend.title=element_blank())+theme(legend.position="bottom")+
 	theme(axis.text=element_text(size=30, colour="black"),
         axis.title=element_text(size=35))+theme(legend.text=element_text(size=30))+
@@ -221,6 +221,7 @@ p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_l
  
 #figure 2(b)
 p1
+
 
 ###########figure 2(c)##################################
 errorE<-read.table("Data/Multimodal/errorE_d20_M10.txt")$V1 #Euclidian norm
@@ -285,13 +286,22 @@ p1<-ggplot(data = all, aes(x=dataset, y=value)) + geom_boxplot(aes(fill=dataset)
     scale_fill_manual(values=c("white","white","white","white","grey","grey"))+theme( axis.text.x = element_text(size = 30))+
     theme(axis.text=element_text(size=30, colour="black"),
         axis.title=element_text(size=35))+theme(legend.text=element_text(size=25))+
-    scale_y_log10(limits = c(0.035,91), breaks = c( 10^{-1.5},10^{-0.5},   10^0.5),labels = trans_format("log10", math_format(10^.x)))+
+    scale_y_log10(limits = c(0.02,15), breaks = c( 10^{-1.5},10^{-0.5},   10^0.5),labels = trans_format("log10", math_format(10^.x)))+
     ylab("estimation error")   +scale_x_discrete(labels=c('1'= expression(bar(theta)[T[1]]^N), '2'=expression(tilde(theta)[T[1]]^N), 
     '3'=expression(bar(theta)[T[2]]^N),'4'=expression(tilde(theta)[T[2]]^N),'5'= expression(tilde(theta)[T[1]]^N),
            '6'= expression(tilde(theta)[T[2]]^N)))
     
 #figure 3(a)
 p1
+
+
+M<-length(tS1)
+m1<-rep(0,M)
+m2<-rep(0,M)
+m1[tS1>2.16]<-1
+m2[tS2<0.23]<-1
+sum(m1*m2) 
+
 
 ######figure 3(b)#################
 theta_star<-read.table("Data/Mixture/theta_star.txt")$V1
@@ -309,7 +319,8 @@ df<- data.frame(Method= factor(c( rep("1", length(points)))),
 
 
 p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_line(size=1)+
-	xlab("iteration t \n (true observations)") +ylab(expression(theta[6])) +theme_bw()+scale_x_continuous(breaks = c(0, 20000,40000,60000,80000, 100000), labels=c("0","20","40", "60", "80","100"))+
+	xlab("iteration t (in thousands) \n (true observations)") +ylab(expression(theta[6])) +theme_bw()+
+	scale_x_continuous(breaks = c(0, 20000,40000,60000,80000, 100000), labels=c("0","20","40", "60", "80","100"))+
         theme(legend.title=element_blank())+theme(legend.position="bottom")+
 	theme(axis.text=element_text(size=30, colour="black"),
         axis.title=element_text(size=35))+theme(legend.text=element_text(size=30))+
@@ -354,7 +365,7 @@ p1<-ggplot(data=df,  aes(x=axis, y=res, group=Method, linetype=Method)) + geom_l
 	scale_linetype_manual(values=c(1, 3,2,5))+
         scale_size_manual(values=c(0.1,2))+
 	theme(legend.key.size = unit(1.2, "cm"))+ theme(legend.position = 'none')+
-         annotate("text", x = 10^{5.2}, y = 10^{-1.3},  label = expression(t^{-0.5}), size=15)
+         annotate("text", x = 10^{5.16}, y = 10^{-1.3},  label = expression(t^{-0.5}), size=15)
 
 
 #figure 3(c)
@@ -408,7 +419,7 @@ p1 <- ggplot(df) +  theme_bw()+labs(y = "density") + theme(legend.position = 'no
 
 
 theta_val<-read.table("Data/g_and_k/local_maxima.txt") 
-theta_val<-theta_val$V1        
+theta_val<-theta_val$V2        
  
                    
 

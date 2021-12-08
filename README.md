@@ -6,6 +6,8 @@ The makefile has been tested only with Linux Ubuntu 20.04.3 LTS.
 
 A lib folder must be created before running the makefile.
 
+Remark: An R package implementing the algoithm proposed in aforementioned paper is available at https://github.com/mathieugerber/PFoptim
+
 
 
 

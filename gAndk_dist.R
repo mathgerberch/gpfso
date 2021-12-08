@@ -39,7 +39,7 @@ n_it2<- 10^6
 comp_seq<-h_Tp(alpha,n_it2)
 
 target_parameters <- list(prior_mean=c(0,1,1), prior_sd=c(1),
-                          h2_t=comp_seq$H^2, student=comp_seq$Tp, Sigma=diag(c_Sigma,d),
+                          h_t=comp_seq$H, student=comp_seq$Tp, Sigma=diag(c_Sigma,d),
                           nu=50)                        
 rm(comp_seq)
 target <- list(dimension = d,
@@ -132,11 +132,10 @@ ind<-(1:M)[res4>4]
 #(5 elements of Theta_{loc,star} are:
 l_max1<-est_mat1[ind[1],]
 l_max2<-est_mat1[ind[2],]
-l_max3<-est_mat1[ind[7],]
-l_max4<-est_mat1[ind[8],]
-l_max5<-est_mat1[ind[13],]
+l_max3<-est_mat1[ind[4],]
+l_max4<-est_mat1[ind[5],]
 ##Save these local optima, the first one being used for Figure 5(a)
-write.table(cbind(l_max1,l_max2,l_max3,l_max4, l_max5), "Data/g_and_k/local_maxima.txt",col.names=FALSE, row.names=FALSE)
+write.table(cbind(l_max1,l_max2,l_max3,l_max4), "Data/g_and_k/local_maxima.txt",col.names=FALSE, row.names=FALSE)
    
 
 
@@ -146,21 +145,21 @@ write.table(cbind(l_max1,l_max2,l_max3,l_max4, l_max5), "Data/g_and_k/local_maxi
 # and potentially the existence of more local maxima than those indentified in the paper.
 # (Warning: numerical error for some values of m)
 ######################################################################################
-theta_star<-read.table("Data/g_and_k/mle.txt")$V1
-M<-100
-res1<-rep(0,M)
-res2<-rep(0,M)
-est_mat<-matrix(0,M,d)
-for(m in 1:M){
-   val<-target$rprior(1, target$parameters)
-   est<-optim(val,lik_g_and_k, method="L-BFGS-B", lower=l, upper=u))
-   est_mat[m,]<-est$par
-   res1[m]<- est$val
-   res2[m]<-max(abs(est$par-theta_star))
-   print(m)
-   print(res1[m])
-   print(res2[m])
-}
+#theta_star<-read.table("Data/g_and_k/mle.txt")$V1
+#M<-100
+#res1<-rep(0,M)
+#res2<-rep(0,M)
+#est_mat<-matrix(0,M,d)
+#for(m in 1:M){
+#   val<-target$rprior(1, target$parameters)
+#   est<-optim(val,lik_g_and_k, method="L-BFGS-B", lower=l, upper=u))
+#   est_mat[m,]<-est$par
+#   res1[m]<- est$val
+#   res2[m]<-max(abs(est$par-theta_star))
+#   print(m)
+#   print(res1[m])
+#   print(res2[m])
+#}
 
 #########################################################################################
 # G-PFSO: 100 runs with T=50000 iterations and with (alpha,c_Sigma,N)=(0.5,10,500)
@@ -169,7 +168,7 @@ theta_star<-read.table("Data/g_and_k/mle.txt")$V1
 n_it2<-5*10^6
 alpha<-0.5
 comp_seq<-h_Tp(alpha,n_it2)
-target$parameters$h2_t<-comp_seq$H^2                     
+target$parameters$h_t<-comp_seq$H                     
 target$parameters$student<-comp_seq$Tp
 n_it<-  50000
 n_it1<- 10000
@@ -213,7 +212,7 @@ n_it2<-5*10^6
 alpha<-0.5
 c_Sigma<-1
 comp_seq<-h_Tp(alpha,n_it2)
-target$parameters$h2_t<-comp_seq$H^2                     
+target$parameters$h_t<-comp_seq$H                   
 target$parameters$student<-comp_seq$Tp
 target$parameters$Sigma<-diag(c_Sigma,d)
 rm(comp_seq) 
@@ -254,7 +253,7 @@ write.table(res3, "Data/g_and_k/errorS_Boxplot_alpha05_c1_N500.txt",col.names=FA
 
 
 #####################################################################################
-# G-PFSO: 5 runs with 2*10^6 iterations (alpha,c_Sigma,N)=(0.5,1,500)
+# G-PFSO: 5 runs with 10^6 iterations (alpha,c_Sigma,N)=(0.5,1,500)
 ######################################################################################
 theta_star<-read.table("Data/g_and_k/mle.txt")$V1
 n_it2<-5*10^6
